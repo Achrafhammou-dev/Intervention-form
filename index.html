@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IT Intervention Form</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="wrapper">
+    <form action="#" id="formint" >
+      <h2>Intervention Report</h2>
+
+      <div class="input-field">
+        <input id="Name" type="text" required>
+        <label>Technician Name</label>
+      </div>
+
+      <div class="input-field">
+        <input id="date" type="datetime-local" required>
+        <label></label>
+      </div>
+
+      <div class="input-field">
+        <input id="seat" type="text" required>
+        <label>Place / Seat</label>
+      </div>
+
+      <div class="input-field">
+        <input  id="type" type="text" required>
+        <label>Type of Intervention (e.g., Network, PC, Printer)</label>
+      </div>
+
+      <div class="input-field">
+        <input id="description" type="text" required>
+        <label>Issue Description</label>
+      </div>
+
+      <div class="input-field">
+        <textarea  id="action" required rows="3"></textarea>
+        <label>Action Taken / Result</label>
+      </div>
+
+
+
+      <button type="submit">Submit Intervention</button>
+
+      <div class="register">
+        <p>Need help? <a href="#">Contact IT Coordinator</a></p>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
+
+
+<script>
+	document.getElementById("formint").addEventListener("submit", function (e) {
+	e.preventDefault(); // Prevent default form submission
+
+	const url = "https://script.google.com/macros/s/AKfycbzN6XgAlcAy53wnSwJtEu3A_iR74Lk_ixrn0Fu2QPenof-raTpaJ5Fpf18e5SsdJ-ON/exec"; // Replace with your Google Apps Script URL
+
+	// Collect form data
+	const formData = {
+		Name: document.getElementById("Name").value,
+		date: document.getElementById("date").value,
+		seat: document.getElementById("seat").value,
+		type: document.getElementById("type").value,
+		description: document.getElementById("description").value,
+    action: document.getElementById("action").value,
+
+	};
+
+	// Send the data as a URL-encoded string
+	fetch(url, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded",
+		},
+		body: new URLSearchParams(formData).toString(),
+	})
+		.then((response) => response.text())
+		.then((data) => {
+			if (data.trim() === "Success") {
+				showCustomPopup("Your Intervention has been sent successfully!");
+				setTimeout(() => {
+                    const closeButton = document.querySelector('#formint .btn-close');
+                    closeButton.click();
+                }, 3000);
+			} else {
+				showCustomPopup("An error occurred: " + data);
+			}
+		})
+		.catch((error) => {
+			console.error("Error:", error);
+			showCustomPopup("An error occurred. Please try again.");
+		});
+});
+
+	// Function to display a custom pop-up
+	function showCustomPopup(message) {
+		// Create the overlay background
+		const overlay = document.createElement("div");
+		overlay.style.position = "fixed";
+		overlay.style.top = "0";
+		overlay.style.left = "0";
+		overlay.style.width = "100%";
+		overlay.style.height = "100%";
+		overlay.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
+		overlay.style.zIndex = "9999";
+		overlay.style.display = "flex";
+		overlay.style.justifyContent = "center";
+		overlay.style.alignItems = "center";
+	
+		// Create the pop-up container
+		const popup = document.createElement("div");
+		popup.style.position = "relative";
+		popup.style.padding = "20px 30px";
+		popup.style.backgroundColor = "#fff";
+		popup.style.borderRadius = "15px";
+		popup.style.textAlign = "center";
+		popup.style.boxShadow = "0px 5px 15px rgba(0, 0, 0, 0.1)";
+		popup.style.animation = "fadeIn 0.5s ease-out";
+	
+		// Add the message to the pop-up
+		const messageText = document.createElement("p");
+		messageText.textContent = message;
+		messageText.style.fontSize = "18px";
+		messageText.style.color = "#333";
+		messageText.style.margin = "0";
+		messageText.style.fontWeight = "bold";
+		popup.appendChild(messageText);
+	
+		// Add a success/checkmark icon
+		const icon = document.createElement("div");
+		icon.innerHTML = "✔️";
+		icon.style.fontSize = "40px";
+		icon.style.marginTop = "10px";
+		icon.style.color = "#28a745";
+		popup.prepend(icon);
+	
+		// Append the pop-up to the overlay
+		overlay.appendChild(popup);
+	
+		// Append the overlay to the body
+		document.body.appendChild(overlay);
+	
+		// Keyframes for fade-in animation
+		const style = document.createElement("style");
+		style.textContent = `
+			@keyframes fadeIn {
+				0% { opacity: 0; transform: scale(0.8); }
+				100% { opacity: 1; transform: scale(1); }
+			}
+		`;
+		document.head.appendChild(style);
+	
+		// Automatically remove the pop-up after 2 seconds
+		setTimeout(() => {
+			document.body.removeChild(overlay); // Remove the overlay and pop-up
+		}, 4000); // 2000ms = 2 seconds
+	}
+	</script>
