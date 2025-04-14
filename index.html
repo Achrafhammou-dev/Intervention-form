@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <!-- <meta http-equiv="refresh" content="5"> -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>IT Intervention Form</title>
   <link rel="stylesheet" href="style.css"/>
@@ -16,20 +17,40 @@
         <label>Technician Name</label>
       </div>
 
-      <div class="input-field">
-        <input id="date" type="datetime-local" required>
-        <label></label>
-      </div>
+	  <div class="input-field" style="position: relative;">
+		<span id="placeholder" style="position: absolute; left: 10px; top: 10px; color: #aaa;">Select start date & time</span>
+		<input id="start" type="datetime-local" required
+			   onfocus="document.getElementById('placeholder').style.display='none';"
+			   onblur="if(!this.value) document.getElementById('placeholder').style.display='block';">
+	  </div>
+	  
+	  
+	  <div class="input-field" style="position: relative;">
+		<span id="placeholder" style="position: absolute; left: 10px; top: 10px; color: #aaa;">Select end date & time</span>
+		<input id="end" type="datetime-local" required
+		onfocus="document.getElementById('placeholder').style.display='none';"
+		onblur="if(!this.value) document.getElementById('placeholder').style.display='block';">
+</div>	  
+	  
+	  <div class="input-field">
+		<input placeholder="duration" id="duration" type="text" disabled>
+	  </div>	  
 
       <div class="input-field">
         <input id="seat" type="text" required>
         <label>Place / Seat</label>
       </div>
 
-      <div class="input-field">
-        <input  id="type" type="text" required>
-        <label>Type of Intervention (e.g., Network, PC, Printer)</label>
-      </div>
+
+
+	  <div class="input-field">
+		<label for="intervention-type"></label>
+		<select id="type" required>
+		  <option value="distance">A Distance</option>
+		  <option value="presentiel">Présentiel</option>
+		</select>
+	  </div>
+	  
 
       <div class="input-field">
         <input id="description" type="text" required>
@@ -52,50 +73,72 @@
   </div>
 </body>
 </html>
-
-
 <script>
-	document.getElementById("formint").addEventListener("submit", function (e) {
-	e.preventDefault(); // Prevent default form submission
+	function calculateDuration() {
+	  const startInput = document.getElementById('start').value;
+	  const endInput = document.getElementById('end').value;
+	
+	  if (startInput && endInput) {
+		const start = new Date(startInput);
+		const end = new Date(endInput);
+	
+		if (end > start) {
+		  const diffMs = end - start;
+		  const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+		  const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+		  document.getElementById('duration').value = `${diffHrs}h ${diffMins}min`;
+		} else {
+		  document.getElementById('duration').value = "Invalid: End before Start";
+		}
+	  } else {
+		document.getElementById('duration').value = "";
+	  }
+	}
+	
+	document.getElementById('start').addEventListener('change', calculateDuration);
+	document.getElementById('end').addEventListener('change', calculateDuration);
+	</script>
+	
+<script>
+document.getElementById("formint").addEventListener("submit", function (e) {
+  e.preventDefault(); // Prevent default form submission
 
-	const url = "https://script.google.com/macros/s/AKfycbzN6XgAlcAy53wnSwJtEu3A_iR74Lk_ixrn0Fu2QPenof-raTpaJ5Fpf18e5SsdJ-ON/exec"; // Replace with your Google Apps Script URL
+  const url = "https://script.google.com/macros/s/AKfycbxNPdTZqdWzP4EtqrYpuWjfXkc-0hQ-c1L3--evkhIBiaOB_OZvAZ5IrG90KN7Mkm12/exec";
 
-	// Collect form data
-	const formData = {
-		Name: document.getElementById("Name").value,
-		date: document.getElementById("date").value,
-		seat: document.getElementById("seat").value,
-		type: document.getElementById("type").value,
-		description: document.getElementById("description").value,
+  const formData = {
+    Name: document.getElementById("Name").value,
+    start: document.getElementById("start").value,
+    end: document.getElementById("end").value,
+    duration: document.getElementById("duration").value,
+    seat: document.getElementById("seat").value,
+    type: document.getElementById("type").value,
+    description: document.getElementById("description").value,
     action: document.getElementById("action").value,
+  };
 
-	};
-
-	// Send the data as a URL-encoded string
-	fetch(url, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/x-www-form-urlencoded",
-		},
-		body: new URLSearchParams(formData).toString(),
-	})
-		.then((response) => response.text())
-		.then((data) => {
-			if (data.trim() === "Success") {
-				showCustomPopup("Your Intervention has been sent successfully!");
-				setTimeout(() => {
-                    const closeButton = document.querySelector('#formint .btn-close');
-                    closeButton.click();
-                }, 3000);
-			} else {
-				showCustomPopup("An error occurred: " + data);
-			}
-		})
-		.catch((error) => {
-			console.error("Error:", error);
-			showCustomPopup("An error occurred. Please try again.");
-		});
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams(formData).toString(),
+  })
+    .then((response) => response.text())
+    .then((data) => {
+      if (data.trim() === "Success") {
+        showCustomPopup("Your Intervention has been sent successfully!");
+        // You can reload the page after 3s if you want:
+        setTimeout(() => location.reload(), 3000);
+      } else {
+        showCustomPopup("An error occurred: " + data);
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      showCustomPopup("An error occurred. Please try again.");
+    });
 });
+
 
 	// Function to display a custom pop-up
 	function showCustomPopup(message) {
