@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <meta charset="UTF-8" />
   <!-- <meta http-equiv="refresh" content="5"> -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -16,6 +19,9 @@
         <input id="Name" type="text" required>
         <label>Technician Name</label>
       </div>
+
+
+	  
 
 	  <div class="input-field" style="position: relative;">
 		<span id="placeholder-start" style="position: absolute; left: 10px; top: 10px; color: #aaa;">Select start date & time</span>
@@ -98,9 +104,43 @@
 	document.getElementById('end').addEventListener('change', calculateDuration);
 	</script>
 	
+
+<!-- 
+	<script>
+		document.getElementById("formint").addEventListener("submit", function (e) {
+		  const nameInput = document.getElementById("Name").value.trim().toLowerCase();
+		  const allowedNames = ["mehdi ezzahri", "amine belkhadim"];
+	  
+		  if (!allowedNames.includes(nameInput)) {
+			e.preventDefault(); // prevent form submission
+	  
+			Swal.fire({
+			  icon: 'error',
+			  title: 'Access Denied',
+			  text: "You're not authorized to fill this form.",
+			  confirmButtonColor: '#d33'
+			});
+		  }
+		});
+	  </script> -->
+	  
+
 <script>
-document.getElementById("formint").addEventListener("submit", function (e) {
-  e.preventDefault(); // Prevent default form submission
+  document.getElementById("formint").addEventListener("submit", function (e) {
+    e.preventDefault(); // Always prevent default first
+
+    const nameInput = document.getElementById("Name").value.trim().toLowerCase();
+    const allowedNames = ["mehdi ezzahri", "amine belkhadim"];
+
+    if (!allowedNames.includes(nameInput)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Access Denied',
+        text: "You're not authorized to fill this form.",
+        confirmButtonColor: '#d33'
+      });
+      return; // Stop here if user is not allowed
+    }
 
   const url = "https://script.google.com/macros/s/AKfycbxNPdTZqdWzP4EtqrYpuWjfXkc-0hQ-c1L3--evkhIBiaOB_OZvAZ5IrG90KN7Mkm12/exec";
 
