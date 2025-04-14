@@ -18,19 +18,18 @@
       </div>
 
 	  <div class="input-field" style="position: relative;">
-		<span id="placeholder" style="position: absolute; left: 10px; top: 10px; color: #aaa;">Select start date & time</span>
+		<span id="placeholder-start" style="position: absolute; left: 10px; top: 10px; color: #aaa;">Select start date & time</span>
 		<input id="start" type="datetime-local" required
-			   onfocus="document.getElementById('placeholder').style.display='none';"
-			   onblur="if(!this.value) document.getElementById('placeholder').style.display='block';">
+			   onfocus="document.getElementById('placeholder-start').style.display='none';"
+			   onblur="if(!this.value) document.getElementById('placeholder-start').style.display='block';">
 	  </div>
 	  
-	  
 	  <div class="input-field" style="position: relative;">
-		<span id="placeholder" style="position: absolute; left: 10px; top: 10px; color: #aaa;">Select end date & time</span>
+		<span id="placeholder-end" style="position: absolute; left: 10px; top: 10px; color: #aaa;">Select end date & time</span>
 		<input id="end" type="datetime-local" required
-		onfocus="document.getElementById('placeholder').style.display='none';"
-		onblur="if(!this.value) document.getElementById('placeholder').style.display='block';">
-</div>	  
+			   onfocus="document.getElementById('placeholder-end').style.display='none';"
+			   onblur="if(!this.value) document.getElementById('placeholder-end').style.display='block';">
+	  </div>
 	  
 	  <div class="input-field">
 		<input placeholder="duration" id="duration" type="text" disabled>
