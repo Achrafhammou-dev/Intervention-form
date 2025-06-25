@@ -15,10 +15,11 @@
     <form action="#" id="formint" >
       <h2>Intervention Report</h2>
 
-      <div class="input-field">
-        <input id="Name" type="text" required>
-        <label>Technician Name</label>
-      </div>
+     <div class="input-field">
+  <input id="matricule" type="text" required>
+  <label>Technician Matricule</label>
+</div>
+
 
 
 	  
@@ -129,23 +130,31 @@
   document.getElementById("formint").addEventListener("submit", function (e) {
     e.preventDefault(); // Always prevent default first
 
-    const nameInput = document.getElementById("Name").value.trim().toLowerCase();
-    const allowedNames = ["mehdi ezzahri", "amine belkhadim"];
+   const technicianMap = {
+  "D447HE": "Amine Belkhadim",
+  "M923FX": "Mehdi Ezzahri",
+  "T120AB": "Youssef Fahsi"
+  // Add more matricules and names here
+};
 
-    if (!allowedNames.includes(nameInput)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Access Denied',
-        text: "You're not authorized to fill this form.",
-        confirmButtonColor: '#d33'
-      });
-      return; // Stop here if user is not allowed
-    }
+const matriculeInput = document.getElementById("matricule").value.trim().toUpperCase();
+const technicianName = technicianMap[matriculeInput];
+
+if (!technicianName) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Access Denied',
+    text: "Matricule not authorized.",
+    confirmButtonColor: '#d33'
+  });
+  return;
+}
+
 
   const url = "https://script.google.com/macros/s/AKfycbziEmQRgBEaso8P616q92pWyE4wJGJ4Dl0aupxZAXx_cdjSsASxK4V8udGyKHrowCV9/exec";
 
   const formData = {
-    Name: document.getElementById("Name").value,
+    Name: technicianName,
     start: document.getElementById("start").value,
     end: document.getElementById("end").value,
     duration: document.getElementById("duration").value,
